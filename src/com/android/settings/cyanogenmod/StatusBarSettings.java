@@ -74,6 +74,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private SwitchPreference mVoicemailBreath;
     private SwitchPreference mShowFourG;
     private ListPreference mStatusBarHeaderFontStyle;
+    private ListPreference mNumColumns;
 
     private SeekBarPreference mQSShadeAlpha;
     private SeekBarPreference mQSHeaderAlpha;
@@ -176,6 +177,15 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         mStatusBarHeaderFontStyle.setValue(Integer.toString(Settings.System.getIntForUser(resolver,
                 Settings.System.STATUS_BAR_HEADER_FONT_STYLE, 0, UserHandle.USER_CURRENT)));
         mStatusBarHeaderFontStyle.setSummary(mStatusBarHeaderFontStyle.getEntry());
+
+        // Number of QS Columns 3,4,5
+        mNumColumns = (ListPreference) findPreference("sysui_qs_num_columns");
+        int numColumns = Settings.System.getIntForUser(resolver,
+                Settings.System.QS_NUM_TILE_COLUMNS, getDefaultNumColums(),
+                UserHandle.USER_CURRENT);
+        mNumColumns.setValue(String.valueOf(numColumns));
+        updateNumColumnsSummary(numColumns);
+        mNumColumns.setOnPreferenceChangeListener(this);
 
         setHasOptionsMenu(true);
         mCheckPreferences = true;
@@ -348,6 +358,12 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             Settings.System.putInt(resolver, Settings.System.QS_SMART_PULLDOWN, smartPulldown);
             updateSmartPulldownSummary(smartPulldown);
             return true;
+        } else if (preference == mNumColumns) {
+            int numColumns = Integer.valueOf((String) newValue);
+            Settings.System.putIntForUser(resolver, Settings.System.QS_NUM_TILE_COLUMNS,
+                    numColumns, UserHandle.USER_CURRENT);
+            updateNumColumnsSummary(numColumns);
+            return true;
         }
         return false;
     }
@@ -429,6 +445,25 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             // Remove title capitalized formatting
             type = type.toLowerCase();
             mSmartPulldown.setSummary(res.getString(R.string.smart_pulldown_summary, type));
+        }
+    }
+
+    private void updateNumColumnsSummary(int numColumns) {
+        String prefix = (String) mNumColumns.getEntries()[mNumColumns.findIndexOfValue(String
+                .valueOf(numColumns))];
+        mNumColumns.setSummary(getResources().getString(R.string.qs_num_columns_showing, prefix));
+    }
+
+    private int getDefaultNumColums() {
+        try {
+            Resources res = getActivity().getPackageManager()
+                    .getResourcesForApplication("com.android.systemui");
+            int val = res.getInteger(res.getIdentifier("quick_settings_num_columns", "integer",
+                    "com.android.systemui")); // better not be larger than 5, that's as high as the
+                                              // list goes atm
+            return Math.max(1, val);
+        } catch (Exception e) {
+            return 3;
         }
     }
 
