@@ -81,9 +81,15 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.settings.fuelgauge.InactiveApps;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.search.Indexable;
+import com.android.settings.util.AbstractAsyncSuCMDProcessor;
+import com.android.settings.util.CMDProcessor;
+import com.android.settings.util.Helpers;
 import com.android.settings.widget.SwitchBar;
 import cyanogenmod.providers.CMSettings;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -195,6 +201,10 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
 
     private static final String DEVELOPMENT_SHORTCUT_KEY = "development_shortcut";
 
+    private static final String MEDIA_SCANNER_ON_BOOT = "media_scanner_on_boot";
+
+    private static final String SELINUX = "selinux";
+
     private static final int RESULT_DEBUG_APP = 1000;
     private static final int RESULT_MOCK_LOCATION_APP = 1001;
 
@@ -290,6 +300,8 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     private SwitchPreference mUpdateRecovery;
 
     private SwitchPreference mDevelopmentShortcut;
+
+    private SwitchPreference mSelinux;
 
     private final ArrayList<Preference> mAllPrefs = new ArrayList<Preference>();
 
@@ -459,6 +471,22 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         mResetSwitchPrefs.add(mShowAllANRs);
 
         mKillAppLongpressBack = findAndInitSwitchPref(KILL_APP_LONGPRESS_BACK);
+
+        // Back long press timeout
+        mKillAppLongpressTimeout = addListPreference(KILL_APP_LONGPRESS_TIMEOUT);
+        mKillAppLongpressTimeout.setOnPreferenceChangeListener(this);
+
+        //SELinux
+        mSelinux = (SwitchPreference) findPreference(SELINUX);
+        mSelinux.setOnPreferenceChangeListener(this);
+
+        if (CMDProcessor.runShellCommand("getenforce").getStdout().contains("Enforcing")) {
+            mSelinux.setChecked(true);
+            mSelinux.setSummary(R.string.selinux_enforcing_title);
+        } else {
+            mSelinux.setChecked(false);
+            mSelinux.setSummary(R.string.selinux_permissive_title);
+        }
 
         Preference hdcpChecking = findPreference(HDCP_CHECKING_KEY);
         if (hdcpChecking != null) {
@@ -2100,6 +2128,21 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
             return true;
         } else if (preference == mKeepScreenOn) {
             writeStayAwakeOptions(newValue);
+            return true;
+        } else if (preference == mKillAppLongpressTimeout) {
+            writeKillAppLongpressTimeoutOptions(newValue);
+            return true;
+        } else if (preference == mMSOB) {
+            writeMSOBOptions(newValue);
+            return true;
+        } else if (preference == mSelinux) {
+            if (newValue.toString().equals("true")) {
+                CMDProcessor.runSuCommand("setenforce 1");
+                mSelinux.setSummary(R.string.selinux_enforcing_title);
+            } else if (newValue.toString().equals("false")) {
+                CMDProcessor.runSuCommand("setenforce 0");
+                mSelinux.setSummary(R.string.selinux_permissive_title);
+            }
             return true;
         }
         return false;

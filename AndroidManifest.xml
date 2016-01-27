@@ -2151,6 +2151,43 @@
             android:theme="@style/CryptKeeperBlankTheme"
         />
 
+        <!-- temasek activities Start -->
+
+        <!-- Temasek Extra info -->
+        <activity android:name="com.android.settings.temasek.extrainfo.MainActivity"
+                  android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar.MinWidth">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <!-- Gesture anywhere -->
+        <activity android:name=".temasek.gestureanywhere.GestureAnywhereBuilderActivity" />
+        <activity android:name=".temasek.gestureanywhere.GestureAnywhereCreateGestureActivity" />
+
+        <!-- PA Pie settings activity. -->
+        <activity android:name="Settings$PieControlSettingsActivity"
+                android:label="@string/pa_pie_control_title"
+                android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.temasek.PieControl" />
+            <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
+                android:resource="@id/button_settings" />
+        </activity>
+
+        <!-- Selinux Switcher -->
+        <receiver android:name="com.android.settings.temasek.util.OnBoot">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- temasek activities End -->
+
         <!-- CyanogenMod activities Start -->
         <activity android:name="Settings$ProfilesSettingsActivity"
                 android:label="@string/profile_settings"
