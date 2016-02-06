@@ -74,6 +74,7 @@
 
     </PreferenceCategory>
 
+<<<<<<< HEAD
     <!-- Lockscreen colors -->
     <PreferenceCategory
             android:key="lockscreen_colors_category"
@@ -106,6 +107,8 @@
 
     </PreferenceCategory>
 
+=======
+>>>>>>> 55b53df... Hide Lockscreen clock & date [2/2]
     <PreferenceCategory
         android:key="general_category"
         android:title="@string/title_general">
