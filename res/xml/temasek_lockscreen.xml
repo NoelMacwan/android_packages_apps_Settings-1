@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2015 crDroid Android
+ 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<PreferenceScreen 
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:settings="http://schemas.android.com/apk/res/com.android.settings"
+        android:title="@string/temasek_lockscreen_title">
+
+    <!-- Weather -->
+    <PreferenceCategory
+        android:key="status_bar_show_weather_category"
+        android:title="@string/status_bar_show_weather_category" >
+
+        <PreferenceScreen
+            android:key="lockscreen_weather"
+            android:title="@string/lock_screen_weather_settings_title"
+            android:fragment="com.android.settings.temasek.LockScreenWeatherSettings" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="lockscreen_shortcuts_category"
+        android:title="@string/temasek_lockscreen_shortcuts_category" >
+
+        <PreferenceScreen
+                 android:key="slim_lockscreen_shortcuts"
+                 android:fragment="com.android.settings.slim.dslv.ActionListViewSettings"
+                 android:summary="@string/lockscreen_shortcuts_summary"
+                 android:title="@string/lockscreen_shortcuts_title">
+             <extra android:name="actionMode" android:value="4" />
+             <extra android:name="maxAllowedActions" android:value="20" />
+             <extra android:name="disableLongpress" android:value="true" />
+             <extra android:name="useAppPickerOnly" android:value="true" />
+             <extra android:name="fragment" android:value="com.android.settings.slim.fragments.LockscreenShortcutFragment" />
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="cm_lockscreen_shortcuts"
+            android:title="@string/cm_lockscreen_shortcuts_title" >
+            <intent
+                android:targetPackage="com.android.systemui"
+                android:targetClass="com.android.systemui.cm.LockscreenShortcutsActivity" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <!-- Hide Lockscreen clock & date -->
+    <PreferenceCategory
+        android:key="hide_lockscreen_items_category"
+        android:title="@string/hide_lockscreen_items_title" >
+
+        <com.android.settings.cyanogenmod.SystemSettingSwitchPreference
+            android:key="hide_lockscreen_clock"
+            android:title="@string/hide_lockscreen_clock_title"
+            android:defaultValue="true" />
+
+        <com.android.settings.cyanogenmod.SystemSettingSwitchPreference
+            android:key="hide_lockscreen_date"
+            android:title="@string/hide_lockscreen_date_title"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <!-- Lockscreen colors -->
+    <PreferenceCategory
+            android:key="lockscreen_colors_category"
+            android:title="@string/lockscreen_colors_title" >
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="lockscreen_owner_info_color"
+            android:title="@string/lockscreen_owner_info_color"
+            android:defaultValue="0xffffffff" />
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="lockscreen_alarm_color"
+            android:title="@string/lockscreen_alarm_color"
+            android:defaultValue="0xffffffff" />
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="lockscreen_clock_color"
+            android:title="@string/lockscreen_clock_color"
+            android:defaultValue="0xffffffff"
+            android:dependency="hide_lockscreen_clock" />
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="lockscreen_clock_date_color"
+            android:title="@string/lockscreen_clock_date_color"
+            android:defaultValue="0xffffffff" />
+
+        <Preference
+            android:key="lockscreen_colors_reset"
+            android:title="@string/lockscreen_colors_reset_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="general_category"
+        android:title="@string/title_general">
+
+        <com.android.settings.cyanogenmod.SystemSettingSwitchPreference
+            android:key="double_tap_sleep_anywhere"
+            android:title="@string/double_tap_sleep_anywhere_title"
+            android:summary="@string/double_tap_sleep_anywhere_summary" />
+
+        <com.android.settings.cyanogenmod.SystemSettingSwitchPreference
+            android:key="keyguard_toggle_torch"
+            android:title="@string/keyguard_torch_title"
+            android:summary="@string/keyguard_torch_summary"
+            android:defaultValue="false" />
+
+        <ListPreference
+            android:key="lock_clock_fonts"
+            android:title="@string/lock_clock_font_title"
+            android:dialogTitle="@string/lock_clock_font_dialog_title"
+            android:entries="@array/lock_clock_fonts_entries"
+            android:entryValues="@array/lock_clock_fonts_values"
+            android:summary="@string/lock_clock_font_summary"
+            android:persistent="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
