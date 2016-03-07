@@ -52,6 +52,8 @@ public class LockScreenSettings extends SettingsPreferenceFragment implements On
     private ColorPickerPreference mLockscreenClockDateColorPicker;
     private Preference mLockscreenColorsReset;
 
+    static final int DEFAULT = 0xffffffff;
+
     @Override
     protected int getMetricsCategory() {
         return MetricsLogger.APPLICATION;
@@ -61,6 +63,8 @@ public class LockScreenSettings extends SettingsPreferenceFragment implements On
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         addPreferencesFromResource(R.xml.tesla_lockscreen);
+
+        ContentResolver resolver = getActivity().getContentResolver();
 
         int intColor;
         String hexColor;
